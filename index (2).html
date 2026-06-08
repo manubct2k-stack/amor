@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Ti 💜</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --purple-deep: #1a0a2e;
+    --purple-mid: #2d1b5e;
+    --purple-rich: #4a2080;
+    --purple-bright: #7b3fc4;
+    --purple-light: #b06fd4;
+    --purple-glow: #d4a8f0;
+    --rose: #e8a0c8;
+    --gold: #f5d78e;
+    --cream: #fdf6ff;
+    --glass-bg: rgba(180, 120, 255, 0.08);
+    --glass-border: rgba(200, 150, 255, 0.25);
+    --glass-shine: rgba(255, 255, 255, 0.15);
+  }
+
+  html, body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: var(--purple-deep);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--cream);
+  }
+
+  /* Animated starfield background */
+  .bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: radial-gradient(ellipse at 20% 20%, #2d1b5e 0%, #1a0a2e 40%),
+                radial-gradient(ellipse at 80% 80%, #1e0a3c 0%, transparent 50%);
+    overflow: hidden;
+  }
+
+  .bg-canvas::before {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background: 
+      radial-gradient(circle at 30% 40%, rgba(120, 60, 200, 0.3) 0%, transparent 40%),
+      radial-gradient(circle at 70% 20%, rgba(200, 100, 255, 0.2) 0%, transparent 30%),
+      radial-gradient(circle at 50% 80%, rgba(80, 30, 160, 0.3) 0%, transparent 40%);
+    animation: nebula-drift 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes nebula-drift {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(2%, 3%) scale(1.05); }
+  }
+
+  .stars-layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: var(--min-op, 0.2); transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+  }
+
+  /* Main content */
+  .page {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+  }
+
+  /* Liquid Glass Card */
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 56px 48px;
+    max-width: 540px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.05) inset,
+      0 40px 80px rgba(0,0,0,0.4),
+      0 0 60px rgba(120, 60, 200, 0.2);
+    animation: card-appear 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes card-appear {
+    from { opacity: 0; transform: translateY(40px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Glass shine effect */
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  }
+
+  .glass-card::after {
+    content: '';
+    position: absolute;
+    top: -40%;
+    left: -10%;
+    width: 60%;
+    height: 80%;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    border-radius: 50%;
+  }
+
+  /* Liquid glass inner blob */
+  .glass-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .blob-1 { width: 200px; height: 200px; background: rgba(180, 80, 255, 0.15); top: -60px; right: -40px; }
+  .blob-2 { width: 150px; height: 150px; background: rgba(100, 200, 255, 0.08); bottom: -40px; left: -30px; }
+
+  .card-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  /* Heart icon */
+  .heart-icon {
+    font-size: 42px;
+    margin-bottom: 24px;
+    display: block;
+    animation: heartbeat 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 12px rgba(220, 100, 180, 0.8));
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.15); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.1); }
+    56% { transform: scale(1); }
+  }
+
+  .welcome-label {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+    font-size: 11px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--purple-glow);
+    margin-bottom: 12px;
+    opacity: 0.8;
+  }
+
+  .welcome-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 400;
+    font-size: 38px;
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--cream) 0%, var(--purple-glow) 50%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+  }
+
+  .welcome-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 44px;
+    line-height: 1.6;
+  }
+
+  /* Divider */
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--purple-glow), transparent);
+    margin: 0 auto 36px;
+  }
+
+  .question {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  /* Name options - liquid glass buttons */
+  .name-options {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 36px;
+  }
+
+  .name-btn {
+    position: relative;
+    background: rgba(120, 60, 200, 0.12);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    padding: 14px 32px;
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    color: var(--cream);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+    letter-spacing: 1px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .name-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: inherit;
+  }
+
+  .name-btn:hover::before { opacity: 1; }
+
+  .name-btn:hover {
+    border-color: var(--purple-bright);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 8px 30px rgba(120, 60, 200, 0.35), 0 0 0 1px rgba(200,150,255,0.2) inset;
+  }
+
+  .name-btn.selected {
+    background: linear-gradient(135deg, rgba(120, 60, 200, 0.4), rgba(180, 80, 255, 0.25));
+    border-color: var(--purple-light);
+    box-shadow: 0 0 30px rgba(180, 80, 255, 0.4), 0 0 0 1px rgba(255,255,255,0.1) inset;
+    transform: translateY(-2px) scale(1.05);
+  }
+
+  /* Proceed button */
+  .proceed-btn {
+    display: none;
+    position: relative;
+    background: linear-gradient(135deg, rgba(120, 60, 200, 0.5), rgba(180, 80, 255, 0.35));
+    border: 1px solid var(--purple-light);
+    border-radius: 50px;
+    padding: 16px 48px;
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    letter-spacing: 2px;
+    color: var(--cream);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    margin: 0 auto;
+  }
+
+  .proceed-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: left 0.5s;
+  }
+
+  .proceed-btn:hover::before { left: 100%; }
+
+  .proceed-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 12px 40px rgba(120, 60, 200, 0.5), 0 0 20px rgba(180,80,255,0.3);
+    border-color: var(--purple-glow);
+  }
+
+  .proceed-btn:active { transform: scale(0.98); }
+
+  .proceed-btn.visible {
+    display: block;
+    animation: btn-appear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes btn-appear {
+    from { opacity: 0; transform: translateY(12px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* Floating petals/particles */
+  .petal {
+    position: fixed;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    font-size: 14px;
+    animation: float-up var(--dur) ease-in var(--delay) infinite;
+  }
+
+  @keyframes float-up {
+    0% { opacity: 0; transform: translateY(100vh) rotate(0deg) scale(0.5); }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.3; }
+    100% { opacity: 0; transform: translateY(-20vh) rotate(360deg) scale(1); }
+  }
+
+  /* Greeting text that updates */
+  .greeting {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--purple-glow);
+    min-height: 24px;
+    margin-bottom: 8px;
+    transition: all 0.4s ease;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-canvas">
+  <div class="stars-layer" id="stars"></div>
+</div>
+
+<div id="petals-container"></div>
+
+<div class="page">
+  <div class="glass-card">
+    <div class="glass-blob blob-1"></div>
+    <div class="glass-blob blob-2"></div>
+    <div class="card-content">
+      <span class="heart-icon">💜</span>
+      <p class="welcome-label">Uma mensagem especial</p>
+      <h1 class="welcome-title">Bem-vinda</h1>
+      <p class="welcome-subtitle">A pessoa mais especial do meu universo</p>
+      <div class="divider"></div>
+      <p class="question">Como gostarias de ser chamada?</p>
+      <div class="name-options">
+        <button class="name-btn" onclick="selectName('Francisca', this)">Francisca</button>
+        <button class="name-btn" onclick="selectName('Kika', this)">Kika</button>
+      </div>
+      <p class="greeting" id="greeting"></p>
+      <button class="proceed-btn" id="proceedBtn" onclick="proceed()">Prosseguir ✦</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Generate stars
+  const starsContainer = document.getElementById('stars');
+  for (let i = 0; i < 200; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 3 + 0.5;
+    star.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      left: ${Math.random() * 100}%; top: ${Math.random() * 100}%;
+      --dur: ${Math.random() * 4 + 2}s;
+      --delay: -${Math.random() * 6}s;
+      --min-op: ${Math.random() * 0.3 + 0.1};
+    `;
+    starsContainer.appendChild(star);
+  }
+
+  // Floating petals
+  const petalsContainer = document.getElementById('petals-container');
+  const petalEmojis = ['🌸', '✦', '⋆', '✿', '❀', '·'];
+  for (let i = 0; i < 15; i++) {
+    const petal = document.createElement('div');
+    petal.className = 'petal';
+    petal.textContent = petalEmojis[Math.floor(Math.random() * petalEmojis.length)];
+    petal.style.cssText = `
+      left: ${Math.random() * 100}%;
+      --dur: ${Math.random() * 10 + 8}s;
+      --delay: ${Math.random() * 10}s;
+    `;
+    petalsContainer.appendChild(petal);
+  }
+
+  let selectedName = null;
+
+  function selectName(name, btn) {
+    selectedName = name;
+    document.querySelectorAll('.name-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+
+    const greetings = {
+      'Francisca': 'Olá, Francisca… que nome bonito para uma pessoa ainda mais bonita 💜',
+      'Kika': 'Olá, Kika… só de te chamar assim o coração aquece 💜'
+    };
+    document.getElementById('greeting').textContent = greetings[name];
+    document.getElementById('proceedBtn').classList.add('visible');
+    sessionStorage.setItem('name', name);
+  }
+
+  function proceed() {
+    if (!selectedName) return;
+    document.querySelector('.glass-card').style.animation = 'card-appear 0.5s cubic-bezier(0.16,1,0.3,1) reverse both';
+    setTimeout(() => { window.location.href = 'universe.html'; }, 500);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vai casar 😂💜</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --purple-deep: #0d0618;
+    --purple-glow: #d4a8f0;
+    --rose: #e8a0c8;
+    --gold: #f5d78e;
+    --cream: #fdf6ff;
+  }
+
+  html, body {
+    min-height: 100vh;
+    background: var(--purple-deep);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  #bg { position: fixed; inset: 0; z-index: 0; }
+
+  .page {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    text-align: center;
+  }
+
+  .glass-main {
+    background: rgba(40, 15, 80, 0.5);
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
+    border: 1px solid rgba(220, 150, 255, 0.25);
+    border-radius: 32px;
+    padding: 56px 48px;
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.5), 0 0 80px rgba(180,80,255,0.2);
+    animation: appear 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  @keyframes appear {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .glass-main::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  }
+
+  .big-emoji {
+    font-size: 72px;
+    display: block;
+    margin-bottom: 24px;
+    animation: shake 0.5s ease 0.5s both, bounce 1s ease 1s infinite;
+    filter: drop-shadow(0 0 15px rgba(255,150,200,0.7));
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg) scale(1.1); }
+    75% { transform: rotate(10deg) scale(1.1); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .mini-label {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+    font-size: 10px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 14px;
+    opacity: 0.8;
+    animation: fade-in 0.8s ease 0.8s both;
+  }
+
+  .main-title {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    font-weight: 400;
+    background: linear-gradient(135deg, var(--cream), var(--rose), var(--purple-glow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.3;
+    margin-bottom: 28px;
+    animation: fade-in 0.8s ease 1s both;
+  }
+
+  .main-title .highlight {
+    font-size: 28px;
+    display: block;
+    background: linear-gradient(135deg, var(--gold), var(--rose));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-top: 8px;
+  }
+
+  .divider {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--rose), transparent);
+    margin: 0 auto 24px;
+    animation: fade-in 0.8s ease 1.2s both;
+  }
+
+  .funny-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    line-height: 1.9;
+    color: rgba(255,255,255,0.85);
+    font-weight: 300;
+    animation: fade-in 0.8s ease 1.4s both;
+  }
+
+  .funny-text em {
+    color: var(--rose);
+    font-style: italic;
+  }
+
+  .funny-text strong {
+    color: var(--gold);
+    font-weight: 500;
+    -webkit-text-fill-color: var(--gold);
+  }
+
+  /* Answer button */
+  .answer-btn {
+    display: inline-block;
+    margin-top: 32px;
+    background: linear-gradient(135deg, rgba(180, 80, 255, 0.4), rgba(220, 80, 160, 0.3));
+    border: 1px solid rgba(220,150,255,0.35);
+    border-radius: 50px;
+    padding: 16px 40px;
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: var(--cream);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: fade-in 0.8s ease 2s both;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(220,150,255,0.3);
+  }
+
+  .answer-btn:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 12px 40px rgba(180,80,255,0.4);
+    background: linear-gradient(135deg, rgba(180, 80, 255, 0.6), rgba(220, 80, 160, 0.4));
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .emoji-rain {
+    position: fixed;
+    pointer-events: none;
+    z-index: 5;
+    font-size: var(--fs, 18px);
+    animation: emoji-drop var(--dur, 4s) ease-in var(--delay, 0s) infinite;
+    left: var(--left);
+    top: -40px;
+    opacity: 0;
+  }
+
+  @keyframes emoji-drop {
+    0% { opacity: 0; transform: translateY(0) rotate(0deg); }
+    10% { opacity: 0.7; }
+    90% { opacity: 0.4; }
+    100% { opacity: 0; transform: translateY(110vh) rotate(360deg); }
+  }
+
+  /* Laughing reaction popup */
+  .reaction {
+    position: absolute;
+    font-size: 24px;
+    animation: reaction-pop 3s ease forwards;
+    pointer-events: none;
+  }
+
+  @keyframes reaction-pop {
+    0% { opacity: 0; transform: scale(0) translateY(0); }
+    15% { opacity: 1; transform: scale(1.2) translateY(-10px); }
+    50% { opacity: 1; transform: scale(1) translateY(-30px); }
+    100% { opacity: 0; transform: scale(0.8) translateY(-80px); }
+  }
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="emoji-rain-container"></div>
+
+<div class="page">
+  <div class="glass-main" id="card">
+    <span class="big-emoji">😂</span>
+    <p class="mini-label">Novos é a cabeça da minha pomba</p>
+    <h1 class="main-title">
+      Vais casar comigo
+      <span class="highlight">SIMMMMMM! 💍</span>
+    </h1>
+    <div class="divider"></div>
+    <p class="funny-text">
+      <em>"Ainda somos novos"...</em><br><br>
+      Minha querida, <strong>a cabeça da minha pomba!</strong> 😂<br><br>
+      Olha que eu já sei que disseste sim no coração. O teu sorriso entregou-te completamente! 
+      <em>Não adianta escapares...</em><br><br>
+      <strong>Vai casar comigo e pronto!</strong> 💜 E vais ser a pessoa mais feliz do mundo — eu trato disso! 
+    </p>
+    <button class="answer-btn" onclick="goBack()">💜 Ok ok... aceito!</button>
+  </div>
+</div>
+
+<script>
+  const bg = document.getElementById('bg');
+  bg.style.cssText = `
+    background: radial-gradient(ellipse at 40% 30%, #2d1b5e 0%, #0d0618 50%),
+                radial-gradient(ellipse at 60% 70%, #1e0a3c 0%, transparent 50%);
+  `;
+
+  // Stars
+  for (let i = 0; i < 200; i++) {
+    const s = document.createElement('div');
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      position: fixed; border-radius: 50%; background: white; pointer-events: none; z-index: 1;
+      width: ${size}px; height: ${size}px;
+      left: ${Math.random() * 100}%; top: ${Math.random() * 100}%;
+      opacity: ${Math.random() * 0.5 + 0.1};
+      animation: tw ${Math.random() * 4 + 2}s ease-in-out ${-Math.random() * 6}s infinite;
+    `;
+    document.body.appendChild(s);
+  }
+
+  // Emoji rain
+  const emojiContainer = document.getElementById('emoji-rain-container');
+  const rains = ['😂', '💜', '💍', '😭', '🌸', '✨', '😅'];
+  for (let i = 0; i < 25; i++) {
+    const e = document.createElement('div');
+    e.className = 'emoji-rain';
+    e.textContent = rains[Math.floor(Math.random() * rains.length)];
+    e.style.cssText = `
+      --left: ${Math.random() * 100}%;
+      --dur: ${Math.random() * 4 + 3}s;
+      --delay: ${Math.random() * 6}s;
+      --fs: ${Math.random() * 14 + 12}px;
+    `;
+    emojiContainer.appendChild(e);
+  }
+
+  function goBack() {
+    window.location.href = 'yes.html';
+  }
+
+  // Reaction emojis on card click
+  const card = document.getElementById('card');
+  card.addEventListener('click', function(e) {
+    const rect = card.getBoundingClientRect();
+    const r = document.createElement('div');
+    r.className = 'reaction';
+    r.textContent = ['😂', '💜', '💍', '🥰'][Math.floor(Math.random() * 4)];
+    r.style.left = (e.clientX - rect.left) + 'px';
+    r.style.top = (e.clientY - rect.top) + 'px';
+    card.appendChild(r);
+    setTimeout(() => r.remove(), 3000);
+  });
+
+  const style = document.createElement('style');
+  style.textContent = `@keyframes tw { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.7; } }`;
+  document.head.appendChild(style);
+</script>
+</body>
+</html>

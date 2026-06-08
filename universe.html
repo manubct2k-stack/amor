@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O Nosso Universo 💜</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cinzel:wght@400;500&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --purple-deep: #0d0618;
+    --purple-mid: #2d1b5e;
+    --purple-rich: #4a2080;
+    --purple-bright: #7b3fc4;
+    --purple-light: #b06fd4;
+    --purple-glow: #d4a8f0;
+    --rose: #e8a0c8;
+    --gold: #f5d78e;
+    --cream: #fdf6ff;
+    --glass-bg: rgba(180, 120, 255, 0.08);
+    --glass-border: rgba(200, 150, 255, 0.25);
+  }
+
+  html, body {
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--cream);
+  }
+
+  /* SPACE CANVAS */
+  #space-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: radial-gradient(ellipse at center, #0d0618 0%, #000 100%);
+  }
+
+  /* Stars generated in JS */
+  .space-star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    transform-origin: center;
+  }
+
+  /* Nebula clouds */
+  .nebula {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0;
+    pointer-events: none;
+    transform-origin: center center;
+  }
+
+  /* ZOOM ANIMATION WRAPPER */
+  #zoom-wrapper {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    transform-origin: center center;
+    animation: cosmic-zoom 4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  @keyframes cosmic-zoom {
+    0% { transform: scale(12) translateZ(0); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: scale(1) translateZ(0); opacity: 1; }
+  }
+
+  /* Stars in zoom layer for warp effect */
+  #warp-stars {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .warp-star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    transform-origin: 50vw 50vh;
+    opacity: 0;
+    animation: warp-out 3.5s ease-out forwards;
+    animation-delay: var(--d, 0s);
+  }
+
+  @keyframes warp-out {
+    0% { opacity: 1; transform: scale(0.2); width: 2px; height: 2px; }
+    50% { opacity: 1; }
+    100% { opacity: 0; transform: scale(1) translateX(var(--tx)) translateY(var(--ty)); width: 1px; height: 20px; }
+  }
+
+  /* MAIN CONTENT - appears after zoom */
+  #main-content {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    overflow-y: auto;
+    opacity: 0;
+    animation: content-appear 1s ease forwards;
+    animation-delay: 3.8s;
+    padding: 60px 24px 80px;
+  }
+
+  @keyframes content-appear {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Persistent stars behind content */
+  #bg-stars { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+
+  /* WIDGETS CONTAINER */
+  .widgets-grid {
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 24px;
+  }
+
+  /* GLASS WIDGET BASE */
+  .widget {
+    background: rgba(40, 15, 80, 0.45);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(200, 150, 255, 0.2);
+    border-radius: 24px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(120, 60, 200, 0.15);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .widget:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 60px rgba(180, 80, 255, 0.2);
+  }
+
+  .widget::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  }
+
+  .widget-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(50px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .widget-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Widget 1 - Date / Anniversary */
+  .widget-1 { grid-column: 1; grid-row: 1 / 3; }
+  .widget-1 .widget-glow { width: 200px; height: 200px; background: rgba(200, 80, 255, 0.15); top: -60px; right: -40px; }
+
+  .widget-label {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--purple-glow);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .widget-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(200,150,255,0.3), transparent);
+  }
+
+  .date-display {
+    font-family: 'Cinzel', serif;
+    font-size: 42px;
+    font-weight: 500;
+    background: linear-gradient(135deg, var(--cream), var(--purple-glow), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+
+  .date-year {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 3px;
+    margin-bottom: 28px;
+  }
+
+  .love-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16.5px;
+    line-height: 1.85;
+    color: rgba(255,255,255,0.8);
+    font-weight: 300;
+  }
+
+  .love-text em {
+    font-style: italic;
+    color: var(--purple-glow);
+  }
+
+  .love-text strong {
+    font-weight: 500;
+    color: var(--gold);
+    -webkit-text-fill-color: var(--gold);
+  }
+
+  .heart-divider {
+    text-align: center;
+    margin: 20px 0;
+    color: var(--rose);
+    font-size: 18px;
+    letter-spacing: 8px;
+  }
+
+  /* Widget 2 - Music */
+  .widget-2 { grid-column: 2; grid-row: 1; }
+  .widget-2 .widget-glow { width: 180px; height: 180px; background: rgba(255, 100, 180, 0.12); bottom: -40px; left: -30px; }
+
+  .music-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .music-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--cream);
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+
+  .music-artist {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 200;
+    margin-bottom: 12px;
+  }
+
+  .yt-embed-wrapper {
+    border-radius: 14px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    border: 1px solid rgba(200,150,255,0.15);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+
+  .yt-embed-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Widget 3 - Love Calculator */
+  .widget-3 { grid-column: 2; grid-row: 2; }
+  .widget-3 .widget-glow { width: 150px; height: 150px; background: rgba(255, 150, 200, 0.12); top: -30px; right: -20px; }
+
+  .profiles-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .iphone-contact {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    font-size: 22px;
+    color: white;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    flex-shrink: 0;
+  }
+
+  .contact-m {
+    background: linear-gradient(135deg, #5e72e4, #8e54e9);
+    border: 2px solid rgba(255,255,255,0.15);
+  }
+
+  .contact-f {
+    background: linear-gradient(135deg, #e45e9a, #c44bb0);
+    border: 2px solid rgba(255,255,255,0.15);
+  }
+
+  .plus-sign {
+    font-size: 24px;
+    color: var(--purple-glow);
+    font-weight: 200;
+    opacity: 0.8;
+  }
+
+  .calc-result {
+    display: none;
+    text-align: center;
+    animation: result-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    margin-bottom: 16px;
+  }
+
+  .calc-result.show { display: block; }
+
+  @keyframes result-pop {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .result-number {
+    font-family: 'Cinzel', serif;
+    font-size: 56px;
+    font-weight: 500;
+    background: linear-gradient(135deg, var(--gold), var(--rose), var(--purple-glow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+
+  .result-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--rose);
+    margin-top: 4px;
+  }
+
+  /* Progress bar */
+  .love-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    margin: 12px 0;
+    overflow: hidden;
+    display: none;
+  }
+
+  .love-bar.show { display: block; }
+
+  .love-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--purple-bright), var(--rose), var(--gold));
+    border-radius: 4px;
+    transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Calc button */
+  .calc-btn {
+    width: 100%;
+    background: rgba(120, 60, 200, 0.2);
+    border: 1px solid rgba(200,150,255,0.3);
+    border-radius: 50px;
+    padding: 13px 24px;
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--cream);
+    cursor: pointer;
+    transition: all 0.3s;
+    backdrop-filter: blur(10px);
+  }
+
+  .calc-btn:hover {
+    background: rgba(120, 60, 200, 0.35);
+    border-color: var(--purple-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(120,60,200,0.3);
+  }
+
+  /* PROPOSAL OVERLAY */
+  #proposal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  #proposal-overlay.show { display: flex; }
+
+  .overlay-blur {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .proposal-card {
+    position: relative;
+    z-index: 2;
+    background: rgba(30, 10, 60, 0.85);
+    backdrop-filter: blur(60px);
+    -webkit-backdrop-filter: blur(60px);
+    border: 1px solid rgba(220, 150, 255, 0.35);
+    border-radius: 32px;
+    padding: 52px 48px;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 80px rgba(150, 60, 255, 0.3);
+    animation: proposal-appear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  @keyframes proposal-appear {
+    from { opacity: 0; transform: scale(0.7) translateY(40px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .proposal-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,200,255,0.5), transparent);
+    border-radius: inherit;
+  }
+
+  .proposal-emoji {
+    font-size: 52px;
+    display: block;
+    margin-bottom: 24px;
+    animation: ring-pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes ring-pulse {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.1) rotate(-5deg); }
+    75% { transform: scale(1.1) rotate(5deg); }
+  }
+
+  .proposal-title {
+    font-family: 'Cinzel', serif;
+    font-size: 28px;
+    font-weight: 500;
+    background: linear-gradient(135deg, var(--cream), var(--purple-glow), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .proposal-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 36px;
+  }
+
+  .proposal-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .prop-btn {
+    border-radius: 50px;
+    padding: 16px 32px;
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 1px solid;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .prop-btn-yes {
+    background: linear-gradient(135deg, rgba(180, 80, 255, 0.4), rgba(220, 120, 255, 0.25));
+    border-color: var(--purple-light);
+    color: var(--cream);
+  }
+
+  .prop-btn-yes:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(180,80,255,0.4);
+    background: linear-gradient(135deg, rgba(180, 80, 255, 0.6), rgba(220, 120, 255, 0.4));
+  }
+
+  .prop-btn-no {
+    background: transparent;
+    border-color: rgba(200,150,255,0.2);
+    color: rgba(255,255,255,0.4);
+    font-size: 12px;
+  }
+
+  .prop-btn-no:hover {
+    transform: translateY(-2px);
+    border-color: rgba(200,150,255,0.4);
+    color: rgba(255,255,255,0.6);
+  }
+
+  /* Stars behind content */
+  .floating-heart {
+    position: fixed;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0;
+    animation: heart-float 6s ease-in var(--delay) infinite;
+    font-size: var(--size, 14px);
+  }
+
+  @keyframes heart-float {
+    0% { opacity: 0; transform: translateY(100vh) scale(0.5); }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.2; }
+    100% { opacity: 0; transform: translateY(-10vh) scale(1) rotate(var(--rot, 0deg)); }
+  }
+
+  /* RING SPARKLES on overlay */
+  .ring-sparkles {
+    position: absolute;
+    inset: -30px;
+    pointer-events: none;
+  }
+
+  .sparkle {
+    position: absolute;
+    width: 4px; height: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--gold);
+    animation: sparkle-twinkle 2s ease-in-out infinite;
+    animation-delay: var(--d, 0s);
+    left: var(--x);
+    top: var(--y);
+  }
+
+  @keyframes sparkle-twinkle {
+    0%, 100% { opacity: 0; transform: scale(0); }
+    50% { opacity: 1; transform: scale(1); }
+  }
+
+  /* page title area */
+  .page-header {
+    text-align: center;
+    margin-bottom: 48px;
+    padding-top: 20px;
+  }
+
+  .page-header-greeting {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+    font-size: 11px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: rgba(212,168,240,0.6);
+    margin-bottom: 10px;
+  }
+
+  .page-header-title {
+    font-family: 'Cinzel', serif;
+    font-size: 32px;
+    background: linear-gradient(135deg, var(--cream), var(--purple-glow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+</style>
+</head>
+<body>
+
+<!-- Space background -->
+<div id="space-canvas"></div>
+<div id="bg-stars"></div>
+
+<!-- Zoom animation layer -->
+<div id="zoom-wrapper">
+  <div id="warp-stars"></div>
+</div>
+
+<!-- Floating hearts -->
+<div id="hearts-container"></div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+  <div class="page-header">
+    <p class="page-header-greeting" id="name-greeting">O nosso universo</p>
+    <h1 class="page-header-title">Para sempre ✦</h1>
+  </div>
+
+  <div class="widgets-grid">
+
+    <!-- WIDGET 1: Anniversary Date -->
+    <div class="widget widget-1">
+      <div class="widget-glow"></div>
+      <div class="widget-content">
+        <div class="widget-label">💜 Aniversário</div>
+        <div class="date-display">11/04</div>
+        <div class="date-year">2 0 2 6</div>
+        <div class="love-text">
+          <em>Há dias que ficam gravados na alma para sempre</em> — e este é um deles. O dia em que o tempo parou um segundo só para me deixar perceber o quanto és especial para mim.<br><br>
+
+          Conhecer-te foi como <strong>descobrir uma estrela que sempre existiu</strong>, mas que eu nunca tinha sabido ver. Desde o primeiro momento, algo em mim soube que eras diferente de tudo o que já tinha conhecido.<br><br>
+
+          <div class="heart-divider">♡ · ♡ · ♡</div>
+
+          Cada dia contigo é uma nova razão para sorrir. A tua forma de rir, de olhar para as coisas, de ser — tudo isso faz do meu mundo um lugar <em>infinitamente mais bonito</em>.<br><br>
+
+          Amo-te com cada parte de mim. Amo-te nos dias fáceis e nos difíceis. Amo-te de manhã quando ainda estás a acordar, e amo-te à noite quando o mundo adormece. <strong>Amo-te, simplesmente.</strong><br><br>
+
+          <em>Obrigado por existires. Obrigado por seres minha.</em> 💜
+        </div>
+      </div>
+    </div>
+
+    <!-- WIDGET 2: Music -->
+    <div class="widget widget-2">
+      <div class="widget-glow"></div>
+      <div class="widget-content">
+        <div class="widget-label">🎵 A Nossa Música</div>
+        <div class="music-inner">
+          <div>
+            <div class="music-title">A Droga do Amor</div>
+            <div class="music-artist">Ari · A nossa canção</div>
+          </div>
+          <div class="yt-embed-wrapper">
+            <iframe 
+              src="https://www.youtube.com/embed/WRxwtV_x8nM?rel=0&modestbranding=1&color=white" 
+              title="A Droga do Amor - Ari Acústico"
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WIDGET 3: Love Calculator -->
+    <div class="widget widget-3">
+      <div class="widget-glow"></div>
+      <div class="widget-content">
+        <div class="widget-label">💫 Compatibilidade</div>
+
+        <div class="profiles-row">
+          <div class="iphone-contact contact-m">M</div>
+          <div class="plus-sign">+</div>
+          <div class="iphone-contact contact-f">F</div>
+        </div>
+
+        <div class="calc-result" id="calc-result">
+          <div class="result-number" id="result-number">100%</div>
+          <div class="result-label">Perfeitos um para o outro ✦</div>
+        </div>
+
+        <div class="love-bar" id="love-bar">
+          <div class="love-fill" id="love-fill"></div>
+        </div>
+
+        <button class="calc-btn" id="calc-btn" onclick="calculateLove()">Calcular ✦</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- PROPOSAL OVERLAY -->
+<div id="proposal-overlay">
+  <div class="overlay-blur"></div>
+  <div class="proposal-card">
+    <div class="ring-sparkles" id="sparkles-container"></div>
+    <span class="proposal-emoji">💍</span>
+    <h2 class="proposal-title">Aceitas casar comigo amor?</h2>
+    <p class="proposal-sub">A pergunta mais importante da minha vida...</p>
+    <div class="proposal-buttons">
+      <button class="prop-btn prop-btn-yes" onclick="answer('yes')">💜 Sim aceito</button>
+      <button class="prop-btn prop-btn-no" onclick="answer('no')">Ainda somos novos</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Name from session
+  const name = sessionStorage.getItem('name') || 'Amor';
+  document.getElementById('name-greeting').textContent = `Bem-vinda ao nosso universo, ${name}`;
+
+  // Generate background stars
+  const bgStars = document.getElementById('bg-stars');
+  for (let i = 0; i < 300; i++) {
+    const s = document.createElement('div');
+    s.style.cssText = `
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      width: ${Math.random() * 2.5 + 0.5}px;
+      height: ${Math.random() * 2.5 + 0.5}px;
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * 100}%;
+      opacity: ${Math.random() * 0.7 + 0.1};
+      animation: twinkle ${Math.random() * 4 + 2}s ease-in-out ${-Math.random() * 6}s infinite;
+    `;
+    bgStars.appendChild(s);
+  }
+
+  // Warp stars animation
+  const warpContainer = document.getElementById('warp-stars');
+  for (let i = 0; i < 120; i++) {
+    const ws = document.createElement('div');
+    ws.className = 'warp-star';
+    const angle = Math.random() * Math.PI * 2;
+    const dist = Math.random() * 60 + 30;
+    ws.style.cssText = `
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * 100}%;
+      --tx: ${Math.cos(angle) * dist}vw;
+      --ty: ${Math.sin(angle) * dist}vh;
+      --d: ${Math.random() * 2}s;
+    `;
+    warpContainer.appendChild(ws);
+  }
+
+  // Nebula blobs
+  const spaceCanvas = document.getElementById('space-canvas');
+  spaceCanvas.style.cssText = `position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse at center, #0d0618 0%, #000 100%);`;
+
+  const nebulas = [
+    { x: 20, y: 30, color: 'rgba(120, 40, 200, 0.25)', size: 400 },
+    { x: 75, y: 60, color: 'rgba(200, 60, 180, 0.15)', size: 350 },
+    { x: 50, y: 15, color: 'rgba(80, 20, 160, 0.2)', size: 500 },
+    { x: 30, y: 80, color: 'rgba(150, 80, 255, 0.12)', size: 300 },
+  ];
+
+  nebulas.forEach(n => {
+    const div = document.createElement('div');
+    div.style.cssText = `
+      position: absolute;
+      width: ${n.size}px; height: ${n.size}px;
+      left: ${n.x}%; top: ${n.y}%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(circle, ${n.color}, transparent 70%);
+      filter: blur(40px);
+      pointer-events: none;
+    `;
+    spaceCanvas.appendChild(div);
+  });
+
+  // Floating hearts
+  const heartsContainer = document.getElementById('hearts-container');
+  const heartEmojis = ['💜', '✦', '⋆', '·', '✿'];
+  for (let i = 0; i < 20; i++) {
+    const h = document.createElement('div');
+    h.className = 'floating-heart';
+    h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+    h.style.cssText = `
+      left: ${Math.random() * 100}%;
+      --delay: ${Math.random() * 8}s;
+      --size: ${Math.random() * 10 + 10}px;
+      --rot: ${Math.random() * 30 - 15}deg;
+    `;
+    heartsContainer.appendChild(h);
+  }
+
+  // Love Calculator
+  let calcDone = false;
+  function calculateLove() {
+    if (calcDone) return;
+    calcDone = true;
+    
+    const btn = document.getElementById('calc-btn');
+    btn.textContent = 'A calcular...';
+    btn.style.opacity = '0.6';
+    btn.style.pointerEvents = 'none';
+
+    setTimeout(() => {
+      const bar = document.getElementById('love-bar');
+      const fill = document.getElementById('love-fill');
+      const result = document.getElementById('calc-result');
+
+      bar.classList.add('show');
+      result.classList.add('show');
+
+      setTimeout(() => { fill.style.width = '100%'; }, 100);
+
+      btn.style.display = 'none';
+
+      // After fill, show proposal overlay
+      setTimeout(showProposal, 3000);
+    }, 1500);
+  }
+
+  // Proposal sparkles
+  function showProposal() {
+    const overlay = document.getElementById('proposal-overlay');
+    overlay.classList.add('show');
+
+    const sparklesContainer = document.getElementById('sparkles-container');
+    for (let i = 0; i < 20; i++) {
+      const sp = document.createElement('div');
+      sp.className = 'sparkle';
+      sp.style.cssText = `--x: ${Math.random() * 100}%; --y: ${Math.random() * 100}%; --d: ${Math.random() * 2}s;`;
+      sparklesContainer.appendChild(sp);
+    }
+  }
+
+  function answer(choice) {
+    if (choice === 'yes') {
+      window.location.href = 'yes.html';
+    } else {
+      window.location.href = 'no.html';
+    }
+  }
+
+  // CSS for twinkle
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.15; transform: scale(1); }
+      50% { opacity: 0.9; transform: scale(1.4); }
+    }
+  `;
+  document.head.appendChild(style);
+</script>
+</body>
+</html>
