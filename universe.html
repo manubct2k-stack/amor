@@ -23,12 +23,17 @@
     --glass-border: rgba(200, 150, 255, 0.25);
   }
 
-  html, body {
-    height: 100vh;
-    overflow: hidden;
+  html {
+    background: #000;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
     background: #000;
     font-family: 'Montserrat', sans-serif;
     color: var(--cream);
+    overflow-x: hidden;
   }
 
   /* SPACE CANVAS */
@@ -101,12 +106,10 @@
   #main-content {
     position: relative;
     z-index: 10;
-    min-height: 100vh;
-    overflow-y: auto;
     opacity: 0;
     animation: content-appear 1s ease forwards;
     animation-delay: 3.8s;
-    padding: 60px 24px 80px;
+    padding: 60px 24px 100px;
   }
 
   @keyframes content-appear {
@@ -825,6 +828,7 @@
   function showProposal() {
     const overlay = document.getElementById('proposal-overlay');
     overlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
 
     const sparklesContainer = document.getElementById('sparkles-container');
     for (let i = 0; i < 20; i++) {
@@ -836,6 +840,7 @@
   }
 
   function answer(choice) {
+    document.body.style.overflow = '';
     if (choice === 'yes') {
       window.location.href = 'yes.html';
     } else {
